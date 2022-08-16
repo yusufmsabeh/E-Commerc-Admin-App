@@ -16,6 +16,7 @@ class FireStoreProvider extends ChangeNotifier {
   List<AppCategory> categories = [];
   File? selectedImage;
   String? seletedItem;
+  bool loading = true;
 
   GlobalKey<FormState> addProductForm = GlobalKey<FormState>();
   TextEditingController nameProductController = TextEditingController();
@@ -64,6 +65,7 @@ class FireStoreProvider extends ChangeNotifier {
 
   AddProductToFireBase() async {
     if (addProductForm.currentState!.validate()) {
+      changeLoading();
       Product product = Product(
           name: nameProductController.text,
           descraption: descriptionProductController.text,
@@ -78,18 +80,24 @@ class FireStoreProvider extends ChangeNotifier {
       ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
           .showSnackBar(const SnackBar(content: Text("Added Successfully")));
       fillData();
+      changeLoading();
     }
   }
 
   deleteProduct(String productId) async {
+    changeLoading();
+
     await FireStorHelper.instance.deleteProduct(productId);
     ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
         .showSnackBar(const SnackBar(content: Text("Deleted Successfully")));
     fillData();
+    changeLoading();
   }
 
   updateProduct(Product product) async {
     if (addProductForm.currentState!.validate()) {
+      changeLoading();
+
       product.name = nameProductControllerEdit.text;
       product.descraption = descriptionProductControllerEdit.text;
       product.price = int.parse(priceProductControllerEdit.text);
@@ -100,6 +108,7 @@ class FireStoreProvider extends ChangeNotifier {
       ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
           .showSnackBar(const SnackBar(content: Text("Updated Successfully")));
       fillData();
+      changeLoading();
     }
   }
 
@@ -111,8 +120,10 @@ class FireStoreProvider extends ChangeNotifier {
   }
 
   fillData() async {
+    changeLoading();
     await readAllProducts();
     await readAllCategories();
+    changeLoading();
   }
 
   emptyControllers() {
@@ -132,5 +143,10 @@ class FireStoreProvider extends ChangeNotifier {
     if (value == "0") return 'This failed can\'t be zero';
 
     if (value == null || value == '') return "This faild is required";
+  }
+
+  changeLoading() {
+    loading = !loading;
+    notifyListeners();
   }
 }

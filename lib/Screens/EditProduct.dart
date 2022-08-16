@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:e_commerce_admin/Providers/FireStoreProvider.dart';
 import 'package:e_commerce_admin/Routers/AppRouter.dart';
+import 'package:e_commerce_admin/Screens/LoadingSpinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -30,78 +31,92 @@ class EditProduct extends StatelessWidget {
         centerTitle: true,
       ),
       body: Consumer<FireStoreProvider>(builder: (context, provider, x) {
-        return Center(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Form(
-            key: provider.addProductForm,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SizedBox(
-                height: 20.h,
+        return Stack(
+          children: [
+            Center(
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Form(
+                key: provider.addProductForm,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          validator: (value) => provider.emptyValidation(value),
+                          controller: provider.nameProductControllerEdit,
+                          decoration: InputDecoration(hintText: "Product Name"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          validator: (value) => provider.emptyValidation(value),
+                          controller: provider.descriptionProductControllerEdit,
+                          decoration:
+                              InputDecoration(hintText: "Product description"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          validator: (value) =>
+                              provider.priceAndQuantityValidation(value),
+                          keyboardType: TextInputType.number,
+                          controller: provider.priceProductControllerEdit,
+                          decoration:
+                              InputDecoration(hintText: "Product price"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          validator: (value) =>
+                              provider.priceAndQuantityValidation(value),
+                          keyboardType: TextInputType.number,
+                          controller: provider.quantityProductControllerEdit,
+                          decoration:
+                              InputDecoration(hintText: "Product quantity"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              provider.updateProduct(product);
+                            },
+                            child: Text("Edit Product")),
+                      ),
+                    ]),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  validator: (value) => provider.emptyValidation(value),
-                  controller: provider.nameProductControllerEdit,
-                  decoration: InputDecoration(hintText: "Product Name"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  validator: (value) => provider.emptyValidation(value),
-                  controller: provider.descriptionProductControllerEdit,
-                  decoration: InputDecoration(hintText: "Product description"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  validator: (value) =>
-                      provider.priceAndQuantityValidation(value),
-                  keyboardType: TextInputType.number,
-                  controller: provider.priceProductControllerEdit,
-                  decoration: InputDecoration(hintText: "Product price"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  validator: (value) =>
-                      provider.priceAndQuantityValidation(value),
-                  keyboardType: TextInputType.number,
-                  controller: provider.quantityProductControllerEdit,
-                  decoration: InputDecoration(hintText: "Product quantity"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () {
-                      provider.updateProduct(product);
-                    },
-                    child: Text("Edit Product")),
-              ),
-            ]),
-          ),
-        ));
+            )),
+            !provider.loading
+                ? Center(child: LoadingSpinner())
+                : SizedBox(
+                    height: 0,
+                    width: 0,
+                  ),
+          ],
+        );
       }),
     );
   }
