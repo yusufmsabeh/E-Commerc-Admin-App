@@ -13,4 +13,8 @@ class AppRouter {
     Navigator.of(navKey.currentContext!)
         .push(MaterialPageRoute(builder: (context) => widget));
   }
+
+  static popWidget() {
+    Navigator.of(navKey.currentContext!).pop();
+  }
 }

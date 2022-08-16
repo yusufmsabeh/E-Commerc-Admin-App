@@ -6,7 +6,10 @@ import 'package:e_commerce_admin/model/Product.dart';
 import 'package:e_commerce_admin/model/catergory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../Routers/AppRouter.dart';
 
 class FireStoreProvider extends ChangeNotifier {
   List<Product> products = [];
@@ -71,13 +74,17 @@ class FireStoreProvider extends ChangeNotifier {
 
       await FireStorHelper.instance.addProductToFirebase(product);
       emptyControllers();
-
+      AppRouter.popWidget();
+      ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
+          .showSnackBar(const SnackBar(content: Text("Added Successfully")));
       fillData();
     }
   }
 
   deleteProduct(String productId) async {
     await FireStorHelper.instance.deleteProduct(productId);
+    ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
+        .showSnackBar(const SnackBar(content: Text("Deleted Successfully")));
     fillData();
   }
 
@@ -89,6 +96,9 @@ class FireStoreProvider extends ChangeNotifier {
       product.quantity = int.parse(quantityProductControllerEdit.text);
 
       await FireStorHelper.instance.updateProduct(product);
+      AppRouter.popWidget();
+      ScaffoldMessenger.of(AppRouter.navKey.currentContext!)
+          .showSnackBar(const SnackBar(content: Text("Updated Successfully")));
       fillData();
     }
   }
