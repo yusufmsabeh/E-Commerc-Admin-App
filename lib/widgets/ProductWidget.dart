@@ -74,11 +74,17 @@ class ProductWidget extends StatelessWidget {
                     provider.fillEditcontrollers(product);
                     AppRouter.pushWidget(EditProduct(product: product));
                   },
-                  icon: Icon(Icons.edit),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.cyan,
+                  ),
                 ),
                 IconButton(
                   onPressed: () => provider.deleteProduct(product.id!),
-                  icon: Icon(Icons.delete),
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                 )
               ],
             )

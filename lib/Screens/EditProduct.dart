@@ -30,10 +30,11 @@ class EditProduct extends StatelessWidget {
         centerTitle: true,
       ),
       body: Consumer<FireStoreProvider>(builder: (context, provider, x) {
-        return SingleChildScrollView(
-          child: Center(
-              child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+        return Center(
+            child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Form(
+            key: provider.addProductForm,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               SizedBox(
@@ -42,6 +43,7 @@ class EditProduct extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextFormField(
+                  validator: (value) => provider.emptyValidation(value),
                   controller: provider.nameProductControllerEdit,
                   decoration: InputDecoration(hintText: "Product Name"),
                 ),
@@ -52,6 +54,7 @@ class EditProduct extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextFormField(
+                  validator: (value) => provider.emptyValidation(value),
                   controller: provider.descriptionProductControllerEdit,
                   decoration: InputDecoration(hintText: "Product description"),
                 ),
@@ -62,6 +65,8 @@ class EditProduct extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextFormField(
+                  validator: (value) =>
+                      provider.priceAndQuantityValidation(value),
                   keyboardType: TextInputType.number,
                   controller: provider.priceProductControllerEdit,
                   decoration: InputDecoration(hintText: "Product price"),
@@ -73,6 +78,8 @@ class EditProduct extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextFormField(
+                  validator: (value) =>
+                      provider.priceAndQuantityValidation(value),
                   keyboardType: TextInputType.number,
                   controller: provider.quantityProductControllerEdit,
                   decoration: InputDecoration(hintText: "Product quantity"),
@@ -80,24 +87,6 @@ class EditProduct extends StatelessWidget {
               ),
               SizedBox(
                 height: 20.h,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButtonHideUnderline(
-                    child: DropdownButton<dynamic>(
-                  value: provider.seletedItem,
-                  onChanged: (value) {
-                    provider.changeSeleteditem(value);
-                  },
-                  items: provider.categories.map((e) {
-                    return DropdownMenuItem(
-                      child: Text(e.name),
-                      value: e.categoryID,
-                    );
-                  }).toList(),
-                )),
               ),
               SizedBox(
                 height: 20.h,
@@ -111,8 +100,8 @@ class EditProduct extends StatelessWidget {
                     child: Text("Edit Product")),
               ),
             ]),
-          )),
-        );
+          ),
+        ));
       }),
     );
   }

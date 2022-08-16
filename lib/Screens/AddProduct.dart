@@ -31,102 +31,114 @@ class AddProduct extends StatelessWidget {
           child: Center(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              InkWell(
-                onTap: provider.getImage,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 238, 235, 235),
-                      borderRadius: BorderRadius.circular(20)),
-                  height: 300,
-                  width: double.infinity,
-                  child: provider.selectedImage == null
-                      ? Icon(
-                          Icons.add,
-                          size: 40,
-                        )
-                      : Image.file(
-                          provider.selectedImage!,
-                          fit: BoxFit.cover,
-                        ),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  controller: provider.nameProductController,
-                  decoration: InputDecoration(hintText: "Product Name"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  controller: provider.descriptionProductController,
-                  decoration: InputDecoration(hintText: "Product description"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: provider.priceProductController,
-                  decoration: InputDecoration(hintText: "Product price"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: provider.quantityProductController,
-                  decoration: InputDecoration(hintText: "Product quantity"),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButtonHideUnderline(
-                    child: DropdownButton<dynamic>(
-                  value: provider.seletedItem,
-                  onChanged: (value) {
-                    provider.changeSeleteditem(value);
-                  },
-                  items: provider.categories.map((e) {
-                    return DropdownMenuItem(
-                      child: Text(e.name),
-                      value: e.categoryID,
-                    );
-                  }).toList(),
-                )),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () {
-                      provider.AddProductToFireBase();
-                    },
-                    child: Text("Add Product")),
-              ),
-            ]),
+            child: Form(
+              key: provider.addProductForm,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: provider.getImage,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 238, 235, 235),
+                            borderRadius: BorderRadius.circular(20)),
+                        height: 300,
+                        width: double.infinity,
+                        child: provider.selectedImage == null
+                            ? Icon(
+                                Icons.add,
+                                size: 40,
+                              )
+                            : Image.file(
+                                provider.selectedImage!,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        validator: (value) => provider.emptyValidation(value),
+                        controller: provider.nameProductController,
+                        decoration: InputDecoration(hintText: "Product Name"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        validator: (value) => provider.emptyValidation(value),
+                        controller: provider.descriptionProductController,
+                        decoration:
+                            InputDecoration(hintText: "Product description"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        validator: (value) =>
+                            provider.priceAndQuantityValidation(value),
+                        keyboardType: TextInputType.number,
+                        controller: provider.priceProductController,
+                        decoration: InputDecoration(hintText: "Product price"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        validator: (value) =>
+                            provider.priceAndQuantityValidation(value),
+                        keyboardType: TextInputType.number,
+                        controller: provider.quantityProductController,
+                        decoration:
+                            InputDecoration(hintText: "Product quantity"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<dynamic>(
+                        value: provider.seletedItem,
+                        onChanged: (value) {
+                          provider.changeSeleteditem(value);
+                        },
+                        items: provider.categories.map((e) {
+                          return DropdownMenuItem(
+                            child: Text(e.name),
+                            value: e.categoryID,
+                          );
+                        }).toList(),
+                      )),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            provider.AddProductToFireBase();
+                          },
+                          child: Text("Add Product")),
+                    ),
+                  ]),
+            ),
           )),
         );
       }),

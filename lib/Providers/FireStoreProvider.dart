@@ -14,6 +14,7 @@ class FireStoreProvider extends ChangeNotifier {
   File? selectedImage;
   String? seletedItem;
 
+  GlobalKey<FormState> addProductForm = GlobalKey<FormState>();
   TextEditingController nameProductController = TextEditingController();
   TextEditingController descriptionProductController = TextEditingController();
   TextEditingController priceProductController = TextEditingController();
@@ -59,16 +60,20 @@ class FireStoreProvider extends ChangeNotifier {
   }
 
   AddProductToFireBase() async {
-    Product product = Product(
-        name: nameProductController.text,
-        descraption: descriptionProductController.text,
-        imagePath: await upLoadFile(selectedImage!),
-        categoryId: seletedItem!,
-        quantity: int.parse(quantityProductController.text),
-        price: int.parse(priceProductController.text));
+    if (addProductForm.currentState!.validate()) {
+      Product product = Product(
+          name: nameProductController.text,
+          descraption: descriptionProductController.text,
+          imagePath: await upLoadFile(selectedImage!),
+          categoryId: seletedItem!,
+          quantity: int.parse(quantityProductController.text),
+          price: int.parse(priceProductController.text));
 
-    await FireStorHelper.instance.addProductToFirebase(product);
-    fillData();
+      await FireStorHelper.instance.addProductToFirebase(product);
+      emptyControllers();
+
+      fillData();
+    }
   }
 
   deleteProduct(String productId) async {
@@ -77,13 +82,15 @@ class FireStoreProvider extends ChangeNotifier {
   }
 
   updateProduct(Product product) async {
-    product.name = nameProductControllerEdit.text;
-    product.descraption = descriptionProductControllerEdit.text;
-    product.price = int.parse(priceProductControllerEdit.text);
-    product.quantity = int.parse(quantityProductControllerEdit.text);
+    if (addProductForm.currentState!.validate()) {
+      product.name = nameProductControllerEdit.text;
+      product.descraption = descriptionProductControllerEdit.text;
+      product.price = int.parse(priceProductControllerEdit.text);
+      product.quantity = int.parse(quantityProductControllerEdit.text);
 
-    await FireStorHelper.instance.updateProduct(product);
-    fillData();
+      await FireStorHelper.instance.updateProduct(product);
+      fillData();
+    }
   }
 
   fillEditcontrollers(Product product) {
@@ -96,5 +103,24 @@ class FireStoreProvider extends ChangeNotifier {
   fillData() async {
     await readAllProducts();
     await readAllCategories();
+  }
+
+  emptyControllers() {
+    nameProductController.text = '';
+    descriptionProductController.text = '';
+    priceProductController.text = '';
+    quantityProductController.text = '';
+    selectedImage = null;
+    notifyListeners();
+  }
+
+  emptyValidation(value) {
+    if (value == null || value == '') return 'This failed is required';
+  }
+
+  priceAndQuantityValidation(value) {
+    if (value == "0") return 'This failed can\'t be zero';
+
+    if (value == null || value == '') return "This faild is required";
   }
 }
