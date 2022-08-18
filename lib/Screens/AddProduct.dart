@@ -32,8 +32,9 @@ class AddProduct extends StatelessWidget {
           children: [
             SingleChildScrollView(
               child: Center(
-                  child: Padding(
+                  child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
+                margin: EdgeInsets.symmetric(vertical: 15.h),
                 child: Form(
                   key: provider.addProductForm,
                   child: Column(
@@ -117,17 +118,24 @@ class AddProduct extends StatelessWidget {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color: Color.fromRGBO(89, 86, 233, 1),
                               borderRadius: BorderRadius.circular(10)),
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton<dynamic>(
+                            dropdownColor: Color.fromRGBO(89, 86, 233, 1),
                             value: provider.seletedItem,
                             onChanged: (value) {
                               provider.changeSeleteditem(value);
                             },
                             items: provider.categories.map((e) {
                               return DropdownMenuItem(
-                                child: Text(e.name),
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10.w),
+                                  child: Text(
+                                    e.name,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
                                 value: e.categoryID,
                               );
                             }).toList(),
