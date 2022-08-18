@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                   colorScheme:
-                      ColorScheme.fromSwatch(primarySwatch: colorCustom)),
+                      ColorScheme.fromSwatch(primarySwatch: colorCustom,)),
               home: ControlPage(),
             );
           }),
